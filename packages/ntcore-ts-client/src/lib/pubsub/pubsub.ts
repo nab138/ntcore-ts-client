@@ -12,6 +12,7 @@ import type {
 export class PubSubClient {
   private readonly _messenger: Messenger;
   private topics: Map<string, NetworkTablesTopic<any>>;
+  private topicList: string[];
   private static _instances = new Map<string, PubSubClient>();
 
   get messenger() {
@@ -26,6 +27,7 @@ export class PubSubClient {
       this.onTopicUnannounce
     );
     this.topics = new Map();
+    this.topicList = [];
 
     // In the DOM, auto-cleanup
     if (typeof window !== 'undefined') {
@@ -94,6 +96,7 @@ export class PubSubClient {
    */
   private onTopicAnnounce = (params: AnnounceMessageParams) => {
     const topic = this.topics.get(params.name);
+    this.topicList.push(params.name);
     if (!topic) {
       console.warn('Received announce for unknown topic', params);
       return;
@@ -108,6 +111,7 @@ export class PubSubClient {
    */
   private onTopicUnannounce = (params: UnannounceMessageParams) => {
     const topic = this.topics.get(params.name);
+    this.topicList.splice(this.topicList.indexOf(params.name), 1);
     if (!topic) {
       console.warn('Received unannounce for unknown topic', params);
       return;
