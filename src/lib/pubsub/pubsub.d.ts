@@ -5,6 +5,7 @@ import type { NetworkTablesTypes } from "../types/types";
 export declare class PubSubClient {
   private readonly _messenger;
   private topics;
+  private topicsList;
   private static _instances;
   get messenger(): Messenger;
   private constructor();
@@ -93,6 +94,13 @@ export declare class PubSubClient {
    * @returns The topic with the given name, or null if no topic with that name exists.
    */
   getTopicFromName(topicName: string): NetworkTablesTopic<any> | null;
+
+  /**
+   * Gets the names of all topics that have been announced (subscribe to / with prefix mode to get all topics).
+   * @returns The names of all topics that have been announced.
+   */
+  getTopicNames(): string[];
+
   /**
    * Cleans up the client by unsubscribing from all topics and stopping publishing for all topics.
    */

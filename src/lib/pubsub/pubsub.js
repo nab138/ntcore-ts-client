@@ -26,6 +26,9 @@ var PubSubClient = /** @class */ (function () {
      * @param params - The announce message parameters.
      */
     this.onTopicAnnounce = function (params) {
+      if (!_this.topicsList.includes(params.name)) {
+        _this.topicsList.push(params.name);
+      }
       var topic = _this.topics.get(params.name);
       if (!topic) {
         console.warn("Received announce for unknown topic", params);
@@ -39,6 +42,9 @@ var PubSubClient = /** @class */ (function () {
      * @param params - The unannounce message parameters.
      */
     this.onTopicUnannounce = function (params) {
+      if (_this.topicsList.includes(params.name)) {
+        _this.topicsList.splice(this.topicsList.indexOf(params.name), 1);
+      }
       var topic = _this.topics.get(params.name);
       if (!topic) {
         console.warn("Received unannounce for unknown topic", params);
@@ -53,6 +59,7 @@ var PubSubClient = /** @class */ (function () {
       this.onTopicUnannounce
     );
     this.topics = new Map();
+    this.topicsList = [];
     // In the DOM, auto-cleanup
     if (typeof window !== "undefined") {
       window.onbeforeunload = function () {
@@ -209,6 +216,15 @@ var PubSubClient = /** @class */ (function () {
       ? _a
       : null;
   };
+
+  /**
+   * Gets the names of all topics that have been announced (subscribe to / with prefix mode to get all topics).
+   * @returns The names of all topics that have been announced.
+   */
+  PubSubClient.prototype.getTopicNames = function () {
+    return this.topicsList;
+  };
+
   /**
    * Cleans up the client by unsubscribing from all topics and stopping publishing for all topics.
    */
