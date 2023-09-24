@@ -36,7 +36,7 @@ var PubSubClient = /** @class */ (function () {
         console.warn("Received announce for unknown topic", params);
         // Create the topic
         let topic = new topic_1.NetworkTablesTopic(
-          this._client,
+          this,
           params.name,
           params.type,
           undefined
