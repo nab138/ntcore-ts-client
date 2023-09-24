@@ -33,7 +33,10 @@ var PubSubClient = /** @class */ (function () {
       }
       var topic = _this.topics.get(params.name);
       if (!topic) {
-        console.warn("Received announce for unknown topic", params);
+        console.warn(
+          "Received announce for unknown topic, registering",
+          params
+        );
         // Create the topic
         let topic = new topic_1.NetworkTablesTopic(
           _this,
@@ -41,7 +44,6 @@ var PubSubClient = /** @class */ (function () {
           params.type,
           undefined
         );
-        return;
       }
       _this.announce(params.id, params.name);
     };
@@ -190,7 +192,6 @@ var PubSubClient = /** @class */ (function () {
    * @returns The topic with the given ID, or null if no topic with that ID exists.
    */
   PubSubClient.prototype.getTopicFromId = function (topicId) {
-    console.log(this.topics);
     var e_1, _a;
     try {
       for (
