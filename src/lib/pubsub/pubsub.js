@@ -112,6 +112,7 @@ var PubSubClient = /** @class */ (function () {
    * @param topic - The topic to register
    */
   PubSubClient.prototype.registerTopic = function (topic) {
+    console.log("Registering topic", topic.name);
     if (this.topics.has(topic.name)) {
       throw new Error(
         "Topic ".concat(
@@ -121,6 +122,7 @@ var PubSubClient = /** @class */ (function () {
       );
     }
     this.topics.set(topic.name, topic);
+    console.log("Registered topic", topic.name);
   };
   /**
    * Marks a topic as announced
