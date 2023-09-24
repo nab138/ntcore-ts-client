@@ -15,7 +15,6 @@ var PubSubClient = /** @class */ (function () {
      * @param message - The message data.
      */
     this.onTopicUpdate = function (message) {
-      console.log(message);
       var topic = _this.getTopicFromId(message.topicId);
       if (!topic) {
         console.warn("Received message for unknown topic", message);
@@ -199,7 +198,7 @@ var PubSubClient = /** @class */ (function () {
         _c = _b.next()
       ) {
         var topic = _c.value;
-        if (topic.id === topicId) {
+        if (topic.id == topicId) {
           return topic;
         }
       }
