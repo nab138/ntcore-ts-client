@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PubSubClient = void 0;
 var tslib_1 = require("tslib");
+var topic_1 = require("./pubsub/topic");
 var messenger_1 = require("../socket/messenger");
+const { NetworkTables } = require("../ntcore-ts-client");
 /** The client for the PubSub protocol. */
 var PubSubClient = /** @class */ (function () {
   function PubSubClient(serverUrl) {
@@ -32,6 +34,13 @@ var PubSubClient = /** @class */ (function () {
       var topic = _this.topics.get(params.name);
       if (!topic) {
         console.warn("Received announce for unknown topic", params);
+        // Create the topic
+        let topic = new topic_1.NetworkTablesTopic(
+          this._client,
+          params.name,
+          params.type,
+          undefined
+        );
         return;
       }
       _this.announce(params.id, params.name);
