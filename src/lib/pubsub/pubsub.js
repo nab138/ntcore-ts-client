@@ -190,6 +190,7 @@ var PubSubClient = /** @class */ (function () {
    * @returns The topic with the given ID, or null if no topic with that ID exists.
    */
   PubSubClient.prototype.getTopicFromId = function (topicId) {
+    console.log(this.topics);
     var e_1, _a;
     try {
       for (
@@ -198,7 +199,7 @@ var PubSubClient = /** @class */ (function () {
         _c = _b.next()
       ) {
         var topic = _c.value;
-        if (topic.id == topicId) {
+        if (topic.id === topicId) {
           return topic;
         }
       }
