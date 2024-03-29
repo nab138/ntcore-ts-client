@@ -112,7 +112,6 @@ export class PubSubClient {
       let type = params.type as keyof typeof NetworkTablesTypeInfosLookup;
       // Create the topic
       topic = new NetworkTablesTopic(this, params.name, NetworkTablesTypeInfosLookup[type], undefined);
-      return;
     }
     topic.announce(params.id, params.pubuid);
   };
