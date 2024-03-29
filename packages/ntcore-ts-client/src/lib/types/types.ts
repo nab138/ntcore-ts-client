@@ -57,6 +57,7 @@ export class NetworkTablesTypeInfos {
   static readonly kBoolean: NetworkTablesTypeInfo = [0, 'boolean'];
   static readonly kDouble: NetworkTablesTypeInfo = [1, 'double'];
   static readonly kInteger: NetworkTablesTypeInfo = [2, 'int'];
+  static readonly kFloat: NetworkTablesTypeInfo = [3, 'float'];
   static readonly kString: NetworkTablesTypeInfo = [4, 'string'];
   static readonly kArrayBuffer: NetworkTablesTypeInfo = [3, 'raw'];
   static readonly kBooleanArray: NetworkTablesTypeInfo = [16, 'boolean[]'];
@@ -65,6 +66,18 @@ export class NetworkTablesTypeInfos {
   static readonly kStringArray: NetworkTablesTypeInfo = [20, 'string[]'];
 }
 
+export const NetworkTablesTypeInfosLookup = {
+  boolean: NetworkTablesTypeInfos.kBoolean,
+  double: NetworkTablesTypeInfos.kDouble,
+  int: NetworkTablesTypeInfos.kInteger,
+  float: NetworkTablesTypeInfos.kFloat,
+  string: NetworkTablesTypeInfos.kString,
+  raw: NetworkTablesTypeInfos.kArrayBuffer,
+  'boolean[]': NetworkTablesTypeInfos.kBooleanArray,
+  'double[]': NetworkTablesTypeInfos.kDoubleArray,
+  'int[]': NetworkTablesTypeInfos.kIntegerArray,
+  'string[]': NetworkTablesTypeInfos.kStringArray,
+};
 export interface BinaryMessageData {
   topicId: number;
   serverTime: number;

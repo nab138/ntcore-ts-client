@@ -550,7 +550,7 @@ export class NetworkTablesSocket {
    * Get the current server time.
    * @returns The current server time.
    */
-  private getServerTime() {
+  getServerTime() {
     return Util.getMicros() - this.offset + this.bestRtt / 2;
   }
 

@@ -1,9 +1,12 @@
 import { Messenger } from '../socket/messenger';
 
-import type { NetworkTablesTopic } from './topic';
-import type {
+import { NetworkTablesTopic } from './topic';
+import {
   AnnounceMessageParams,
   BinaryMessageData,
+  NetworkTablesTypeInfo,
+  NetworkTablesTypeInfos,
+  NetworkTablesTypeInfosLookup,
   NetworkTablesTypes,
   PropertiesMessageParams,
   UnannounceMessageParams,
@@ -15,6 +18,7 @@ export class PubSubClient {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private topics: Map<string, NetworkTablesTopic<any>>;
   private static _instances = new Map<string, PubSubClient>();
+  private topicsList: string[] = [];
 
   get messenger() {
     return this._messenger;
@@ -95,9 +99,19 @@ export class PubSubClient {
    * @param params - The announce message parameters.
    */
   private onTopicAnnounce = (params: AnnounceMessageParams) => {
-    const topic = this.topics.get(params.name);
+    if (!this.topicsList.includes(params.name)) {
+      this.topicsList.push(params.name);
+    }
+    let topic = this.topics.get(params.name);
     if (!topic) {
-      console.warn(`Topic ${params.name} was announced, but does not exist`);
+      console.warn('Received announce for unknown topic, registering', params);
+      if (!NetworkTablesTypeInfosLookup.hasOwnProperty(params.type)) {
+        console.warn(`Unknown type ${params.type} for topic ${params.name}`);
+        return;
+      }
+      let type = params.type as keyof typeof NetworkTablesTypeInfosLookup;
+      // Create the topic
+      topic = new NetworkTablesTopic(this, params.name, NetworkTablesTypeInfosLookup[type], undefined);
       return;
     }
     topic.announce(params.id, params.pubuid);
@@ -108,6 +122,9 @@ export class PubSubClient {
    * @param params - The unannounce message parameters.
    */
   private onTopicUnannounce = (params: UnannounceMessageParams) => {
+    if (this.topicsList.includes(params.name)) {
+      this.topicsList.splice(this.topicsList.indexOf(params.name), 1);
+    }
     const topic = this.topics.get(params.name);
     if (!topic) {
       console.warn(`Topic ${params.name} was unannounced, but does not exist`);
@@ -160,6 +177,14 @@ export class PubSubClient {
    */
   getTopicFromName(topicName: string) {
     return this.topics.get(topicName) ?? null;
+  }
+
+  /**
+   * Get the names of all topics this client is aware of.
+   * @returns The names of all topics this client is aware of.
+   */
+  getTopicNames() {
+    return this.topicsList;
   }
 
   /**
