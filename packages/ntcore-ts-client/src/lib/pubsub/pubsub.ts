@@ -4,8 +4,6 @@ import { NetworkTablesTopic } from './topic';
 import {
   AnnounceMessageParams,
   BinaryMessageData,
-  NetworkTablesTypeInfo,
-  NetworkTablesTypeInfos,
   NetworkTablesTypeInfosLookup,
   NetworkTablesTypes,
   PropertiesMessageParams,
