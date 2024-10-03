@@ -190,7 +190,7 @@ export class Util {
    * @returns The server URL with a unique client ID.
    */
   static createServerUrl(uri: string, port: number): string {
-    return `ws://${uri}:${port}/nt/ntcore-ts-${Util.generateUid()}`;
+    return `ws://${uri}:${port}/nt/ShrinkWrap-${Util.generateUid()}`;
   }
 
   /**
