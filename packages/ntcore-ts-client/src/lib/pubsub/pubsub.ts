@@ -103,7 +103,7 @@ export class PubSubClient {
    * @param params - The announce message parameters.
    */
   private onTopicAnnounce = (params: AnnounceMessageParams) => {
-    if (this.topicsList.find((t) => t.name === params.name) !== undefined) {
+    if (this.topicsList.find((t) => t.name === params.name) === undefined) {
       this.topicsList.push({
         name: params.name,
         type: NetworkTablesTypeInfosLookup[params.type as keyof typeof NetworkTablesTypeInfosLookup],
