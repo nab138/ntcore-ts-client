@@ -4,11 +4,17 @@ import { NetworkTablesTopic } from './topic';
 import {
   AnnounceMessageParams,
   BinaryMessageData,
+  NetworkTablesTypeInfo,
   NetworkTablesTypeInfosLookup,
   NetworkTablesTypes,
   PropertiesMessageParams,
   UnannounceMessageParams,
 } from '../types/types';
+
+export type TopicInfo = {
+  name: string;
+  type: NetworkTablesTypeInfo;
+}
 
 /** The client for the PubSub protocol. */
 export class PubSubClient {
@@ -16,7 +22,7 @@ export class PubSubClient {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private topics: Map<string, NetworkTablesTopic<any>>;
   private static _instances = new Map<string, PubSubClient>();
-  private topicsList: string[] = [];
+  private topicsList: TopicInfo[] = [];
 
   get messenger() {
     return this._messenger;
@@ -97,8 +103,11 @@ export class PubSubClient {
    * @param params - The announce message parameters.
    */
   private onTopicAnnounce = (params: AnnounceMessageParams) => {
-    if (!this.topicsList.includes(params.name)) {
-      this.topicsList.push(params.name);
+    if (this.topicsList.find((t) => t.name === params.name) !== undefined) {
+      this.topicsList.push({
+        name: params.name,
+        type: NetworkTablesTypeInfosLookup[params.type as keyof typeof NetworkTablesTypeInfosLookup],
+      });
     }
     let topic = this.topics.get(params.name);
     if (!topic) {
@@ -108,7 +117,6 @@ export class PubSubClient {
         return;
       }
       let type = params.type as keyof typeof NetworkTablesTypeInfosLookup;
-      // Create the topic
       topic = new NetworkTablesTopic(this, params.name, NetworkTablesTypeInfosLookup[type], undefined);
     }
     topic.announce(params.id, params.pubuid);
@@ -119,7 +127,7 @@ export class PubSubClient {
    * @param params - The unannounce message parameters.
    */
   private onTopicUnannounce = (params: UnannounceMessageParams) => {
-    if (this.topicsList.includes(params.name)) {
+    if (this.topicsList.find((t) => t.name === params.name) !== undefined) {
       this.topicsList.splice(this.topicsList.indexOf(params.name), 1);
     }
     const topic = this.topics.get(params.name);
@@ -181,6 +189,14 @@ export class PubSubClient {
    * @returns The names of all topics this client is aware of.
    */
   getTopicNames() {
+    return this.topicsList.map((topic) => topic.name);
+  }
+
+  /**
+   * Get the names and types of all topics this client is aware of.
+   * @returns The names and types of all topics this client is aware of.
+   */
+  getTopicInfos() {
     return this.topicsList;
   }
 
