@@ -127,8 +127,9 @@ export class PubSubClient {
    * @param params - The unannounce message parameters.
    */
   private onTopicUnannounce = (params: UnannounceMessageParams) => {
-    if (this.topicsList.find((t) => t.name === params.name) !== undefined) {
-      this.topicsList.splice(this.topicsList.indexOf(params), 1);
+    let found = this.topicsList.find((t) => t.name === params.name);
+    if (found !== undefined) {
+      this.topicsList.splice(this.topicsList.indexOf(found), 1);
     }
     const topic = this.topics.get(params.name);
     if (!topic) {
