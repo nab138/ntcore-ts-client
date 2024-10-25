@@ -258,10 +258,11 @@ export class NetworkTablesTopic<T extends NetworkTablesTypes> {
    * Publishes the topic.
    * @param properties - The properties to publish the topic with.
    * @param id - The UID of the publisher.
+   * @param force - Whether to force the topic to publish.
    * @returns A promise that resolves when the topic is published.
    */
-  async publish(properties: TopicProperties = {}, id?: number): Promise<AnnounceMessage | void> {
-    if (this.publisher) return;
+  async publish(properties: TopicProperties = {}, id?: number, force: boolean = false): Promise<AnnounceMessage | void> {
+    if (!force && this.publisher) return;
 
     this._pubuid = id ?? Util.generateUid();
     this._publishProperties = properties;
@@ -272,6 +273,7 @@ export class NetworkTablesTopic<T extends NetworkTablesTypes> {
       pubuid: this._pubuid,
       properties,
     };
+    console.log(publishParams)
 
     return await this.client.messenger.publish(publishParams);
   }
